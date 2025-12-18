@@ -43,7 +43,7 @@ resource "aws_db_instance" "wp_db" {
 
   db_name  = "wordpress"
   username = "admin"
-  password = "StrongPassword123!"   # 🔴 change this
+  password = "cloud123"   # 🔴 change this
 
   multi_az = false                  # true for production
   publicly_accessible = false
