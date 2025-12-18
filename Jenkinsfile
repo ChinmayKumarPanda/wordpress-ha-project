@@ -7,12 +7,6 @@ pipeline {
 
   stages {
 
-    stage('Checkout') {
-      steps {
-        echo "Code already checked out from SCM"
-      }
-    }
-
     stage('Terraform Init') {
       steps {
         sh 'terraform init'
