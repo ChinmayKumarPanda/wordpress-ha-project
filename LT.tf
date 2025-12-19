@@ -1,3 +1,7 @@
+resource "aws_iam_role_policy_attachment" "cloudwatch_agent" {
+  role       = aws_iam_role.ec2_s3_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
 resource "aws_iam_role" "ec2_s3_role" {
   name = "wp-ec2-s3-role"
 
@@ -12,6 +16,8 @@ resource "aws_iam_role" "ec2_s3_role" {
     }]
   })
 }
+
+# S3 access
 resource "aws_iam_role_policy" "s3_policy" {
   role = aws_iam_role.ec2_s3_role.id
 
@@ -27,14 +33,22 @@ resource "aws_iam_role_policy" "s3_policy" {
     }]
   })
 }
+
+# ✅ CloudWatch Agent (MANDATORY)
+resource "aws_iam_role_policy_attachment" "cloudwatch_agent" {
+  role       = aws_iam_role.ec2_s3_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "wp-ec2-instance-profile"
   role = aws_iam_role.ec2_s3_role.name
 }
+
 resource "aws_launch_template" "lt" {
   name_prefix   = "wp-lt"
   image_id      = "ami-00ca570c1b6d79f36"
-  instance_type = "t3.micro"
+  instance_type = "t3.small"   # 🔥 changed
   key_name      = "project"
 
   user_data = filebase64("userdata.sh")
@@ -48,4 +62,3 @@ resource "aws_launch_template" "lt" {
     security_groups             = [aws_security_group.ec2_sg.id]
   }
 }
-
