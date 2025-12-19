@@ -7,9 +7,18 @@ pipeline {
 
   stages {
 
+    stage('Checkout Code') {
+      steps {
+        git branch: 'main',
+            url: 'https://github.com/ChinmayKumarPanda/wordpress-ha-project.git'
+      }
+    }
+
     stage('Terraform Init') {
       steps {
-        sh 'terraform init'
+        sh '''
+        terraform init -input=false
+        '''
       }
     }
 
@@ -21,13 +30,13 @@ pipeline {
 
     stage('Terraform Plan') {
       steps {
-        sh 'terraform plan'
+        sh 'terraform plan -out=tfplan'
       }
     }
 
     stage('Terraform Apply') {
       steps {
-        sh 'terraform apply -auto-approve'
+        sh 'terraform apply -auto-approve tfplan'
       }
     }
   }
