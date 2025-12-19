@@ -17,6 +17,7 @@ pipeline {
     stage('Terraform Init') {
       steps {
         sh '''
+        cd terraform
         terraform init -input=false
         '''
       }
@@ -24,19 +25,28 @@ pipeline {
 
     stage('Terraform Validate') {
       steps {
-        sh 'terraform validate'
+        sh '''
+        cd terraform
+        terraform validate
+        '''
       }
     }
 
     stage('Terraform Plan') {
       steps {
-        sh 'terraform plan -out=tfplan'
+        sh '''
+        cd terraform
+        terraform plan -out=tfplan
+        '''
       }
     }
 
     stage('Terraform Apply') {
       steps {
-        sh 'terraform apply -auto-approve tfplan'
+        sh '''
+        cd terraform
+        terraform apply -auto-approve tfplan
+        '''
       }
     }
   }
